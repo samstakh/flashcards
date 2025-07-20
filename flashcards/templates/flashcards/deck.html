@@ -1,0 +1,65 @@
+{% extends 'flashcards/layout.html' %}
+{% load tz %}
+
+{% block title %}{{ deck.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100" style="margin-top: -100px;">
+  <div style="width: 100%; max-width: 500px;">
+    <div class="card shadow rounded" style="max-height: 80vh; overflow-y: auto;">
+      
+      <!-- Card Header -->
+      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <span>{{ deck.name }}</span>
+        <div>
+          <a href="{% url 'index' %}" class="btn btn-sm btn-warning">Back</a>
+          <a href="{% url 'addCard' deck.id %}" class="btn btn-sm btn-light">Add Card</a>
+          <a href="{% url 'viewCards' deck.id %}" class="btn btn-sm btn-primary">View Cards</a>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        {% if cards %}
+          <p><strong>Cards: {{ cards.count }}</strong></p>
+          <p style="text-align: center;" class="text-muted">Last Reviewed: {{ deck.last_reviewed|localtime|date:"D, M j @ g:i A"}}</p>
+          <br>
+          <div class="text-center">
+            <a href="{% url 'studyDeck' deck.id %}" class="btn btn-sm btn-primary mb-3">Study now</a>
+          </div>
+        {% else %}
+          <p class="text-muted">No cards in this deck yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+
+    <div style="margin-top:100px;">
+      <p>Share this deck:</p>
+      <div class="input-group mb-3">
+        <input id="shareLink" type="text" class="form-control" readonly value="{{ share_url }}">
+  
+        <button class="btn btn-outline-secondary" type="button" onclick="copyShareLink()">Copy</button>
+      </div>
+      <p id="copyMessage" class="text-success" style="display: none;">Link copied!</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function copyShareLink() {
+    const input = document.getElementById("shareLink");
+    input.select();
+    input.setSelectionRange(0, 99999); // For mobile devices
+    document.execCommand("copy");
+
+    // Optional: Feedback message
+    const msg = document.getElementById("copyMessage");
+    msg.style.display = "block";
+    setTimeout(() => {
+      msg.style.display = "none";
+    }, 2000);
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+from django.urls import path
+from . import views
+
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('login/', views.login, name='login'),
+    path('register', views.register, name='register'),
+    path('logout/', views.logout_view, name='logout'),
+    path('viewDecks/', views.viewDecks, name='viewDecks'),
+    path('addCard/', views.addCard, name='addCard'),
+    path('addDeck/', views.addDeck, name='addDeck'),
+    path('viewDeck/<int:deck_id>/', views.viewDeck, name='viewDeck'),
+    path('addCard/<int:deck_id>/', views.addCard, name='addCard'),
+    path('viewCards/<int:deck_id>/', views.viewCards, name='viewCards'),
+    path('editCard/<int:card_id>/edit', views.editCard, name='editCard'),
+    path('deleteCard/<int:card_id>/delete', views.deleteCard, name='deleteCard'),
+    path('study/<int:deck_id>/', views.studyDeck, name='studyDeck'),
+    path("set_timezone/", views.set_timezone, name="set_timezone"),
+    path("copy/<str:token>/", views.copy_shared_deck, name="copy_shared_deck"),
+    path('shared/<str:token>/', views.sharedDeckView, name='shared_deck_view'),
+]       
