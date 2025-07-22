@@ -10,6 +10,9 @@ from django.contrib.auth import authenticate, login as auth_login
 from .models import Deck, Card
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.core.validators import validate_email
+from django.db.models import Q
+from django.core.exceptions import ValidationError
 import random
 
 
@@ -24,17 +27,27 @@ def index(request):
 def login(request):
 
     if request.method == "POST":
-        username = request.POST["username"]
+        identifier = request.POST["identifier"] # username or email address identifier
         password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
+
+
+        # try to find user by username/email
+        try:
+            user_obj = User.objects.get(Q(username=identifier) | Q(email=identifier))
+        except User.DoesNotExist:
+            messages.error(request, 'Invalid login credentials.')
+            return redirect('login')
         
+
+        # otherwise authenticate user using username
+        user = authenticate(request, username=user_obj.username, password=password)
         # login in account exists
         if user is not None:
             auth_login(request, user)
             return redirect("index")
         
         else:
-            messages.error(request, "Invalid username or password.")
+            messages.error(request, "Invalid login credentials.")
             return redirect("login")
         
     return render(request, "flashcards/login.html")
@@ -54,6 +67,13 @@ def register(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirmPassword")
         
+        # validate email syntax
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, 'Invalid email')
+            return redirect('register')
+    
         # show error if passwords dont match
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")

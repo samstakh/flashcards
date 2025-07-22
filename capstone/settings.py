@@ -35,6 +35,9 @@ AUTH_USER_MODEL = 'flashcards.User'
 USE_TZ = True
 TIME_ZONE = 'UTC' 
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Flashcards App <no-reply@flashcards.com>'
+
 
 # Application definition
 
