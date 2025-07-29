@@ -1,1 +1,1 @@
-web: gunicorn flashcards.wsgi
+web: gunicorn capstone.wsgi
