@@ -10,7 +10,6 @@ gunicorn==23.0.0
 h11==0.16.0
 idna==3.6
 iniconfig==2.0.0
-jellyfish==0.11.2
 lib50==3.0.12
 Markdown==3.8
 markdown2==2.5.3
